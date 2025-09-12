@@ -201,6 +201,7 @@ MQTT = {
     "reconnect": {"initial": 5, "backoff": 2, "limit": 60},
 }
 
+URL_ROUTING = []
 # overwrite with module_settings
 try:
     INCLUDED_APPS = []

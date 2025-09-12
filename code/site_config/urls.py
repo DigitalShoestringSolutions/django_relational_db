@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path,include
 from django.shortcuts import redirect
 
@@ -28,13 +29,20 @@ def redirect_root(request):
 urlpatterns = [
     path('',redirect_root),
     path('admin/', admin.site.urls),
-    path('state/', include('state.urls')),
-    path('events/',include('state.event_urls')),
 ]
 
-admin.site.site_header = "Location Tracking Admin"
-admin.site.site_title = "Location Tracking Admin Portal"
-admin.site.index_title = "Welcome to Location Tracking Administration Portal"
+for entry in settings.URL_ROUTING:
+    urlpatterns.append(
+        path(entry[0], include(entry[1]))
+    )
+
+if hasattr(settings,"ADMIN_HEADER"):
+    admin.site.site_header = settings.ADMIN_HEADER 
+if hasattr(settings, "ADMIN_TITLE"):
+    admin.site.site_title = settings.ADMIN_TITLE
+
+if hasattr(settings, "ADMIN_INDEX"):
+    admin.site.index_title = settings.ADMIN_INDEX
 
 from django.contrib.auth.models import Group
 admin.site.unregister(Group)
