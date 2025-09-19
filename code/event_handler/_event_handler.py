@@ -45,7 +45,7 @@ class Event:
 
     def match(self, spec):
         for index, entry in enumerate(spec):
-            if self.__topic[index] != entry:
+            if self.__topic[index] != entry and entry != "+":
                 return False
 
         return True
