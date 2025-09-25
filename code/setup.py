@@ -16,8 +16,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
 from django.core.management.utils import get_random_secret_key
 from pathlib import Path
+import json
+
+
+def get_input(prompt):
+    print(json.dumps({"type": "input", "prompt": prompt}))
+    return input()
+
+
+def print_output(message, variant="info"):
+    print(json.dumps({"type": "output", "message": message, "variant": variant}))
+
 
 secret_key_file = Path("/app/data/secret_key")
 
@@ -29,14 +41,14 @@ if not secret_key_file.exists():
 intial_admin_pw_file = Path("/app/data/admin_pw")
 
 if intial_admin_pw_file.exists():
-    print("initial admin password already set")
+    print_output("initial admin password already set")
 else:
     admin_password = None
     while not admin_password:
-        admin_password = input("Enter an initial password for the admin account:")
+        admin_password = get_input("Enter an initial password for the admin account")
         if admin_password:
             with open(intial_admin_pw_file, "w") as f:
                 f.write(admin_password)
-            print("Initial admin password saved")
+            print_output("Initial admin password saved", variant="success")
         else:
-            print("No admin password provided")
+            print_output("No admin password provided", variant="warning")
